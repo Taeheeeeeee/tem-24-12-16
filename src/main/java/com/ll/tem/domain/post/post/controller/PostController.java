@@ -1,10 +1,15 @@
 package com.ll.tem.domain.post.post.controller;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/posts")
+@Validated
 public class PostController {
 
     private String getFormHtml(String errorMessage, String title, String content) {
@@ -27,25 +32,15 @@ public class PostController {
     @PostMapping("/write")
     @ResponseBody
     public String write(
-            @RequestParam("title") String title,
-            @RequestParam("content") String content
+            @RequestParam("title")
+            @NotBlank(message = "제목을 입력해주세요")
+            @Length(min = 5, message = "제목을 5자 이상 입력해주세요")
+            String title
+            , @RequestParam("content")
+            @NotBlank(message = "내용을 입력해주세요")
+            @Length(min = 10, message = "내용을 10자 이상 입력해주세요")
+            String content
     ) {
-        if (title.length() < 5) {
-            return getFormHtml("제목을 5자 이상 입력해주세요", title, content);
-        }
-
-        if (title == null || title.isBlank()) {
-            return getFormHtml("제목을 입력해주세요", title, content);
-        }
-
-        if (content.length() < 10) {
-            return getFormHtml("내용을 10자 이상 입력해주세요", title, content);
-        }
-
-        if (content == null || content.isBlank()) {
-            return getFormHtml("내용을 입력하세요", title, content);
-        }
-
         return """
                 <h1>글쓰기 완료</h1>
                 
