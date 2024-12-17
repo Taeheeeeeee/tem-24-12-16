@@ -21,13 +21,7 @@ public class PostController {
     @GetMapping("/write")
     @ResponseBody
     public String showWrite() {
-        return """
-                <form method="POST">
-                    <input type="text" name="title" placeholder="제목">
-                    <textarea name="content" placeholder="내용"></textarea>
-                    <button type="submit">글쓰기</button>
-                </form>
-                """;
+        return getFormHtml("", "", "");
     }
 
     @PostMapping("/write")
