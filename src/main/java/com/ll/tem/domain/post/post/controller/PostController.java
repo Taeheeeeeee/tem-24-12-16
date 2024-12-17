@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -85,23 +86,24 @@ public class PostController {
     ){ }
 
     @PostMapping("/write")
-    public ResponseEntity<String> write(
+    public String write(
             @Valid PostWriteForm form
             , BindingResult bindingResult
+            , Model model
     ) {
         if(bindingResult.hasErrors()){
-            String errorMessages = bindingResult.getAllErrors()
+            String errorMessage = bindingResult.getAllErrors()
                     .stream()
                     .map(err -> err.getDefaultMessage())
                     .sorted()
                     .map(message -> message.split("-", 2)[1])
                     .collect(Collectors.joining("<br>"));
 
-            return ResponseEntity
-                    .badRequest() // 400(Bad Request, 고객 잘못으로 인해 실패)
-                    .body(
-                            getFormHtml(errorMessages, form.title, form.content)
-                    );
+            model.addAttribute("errorMessage", errorMessage);
+            model.addAttribute("title", form.title);
+            model.addAttribute("content", form.content);
+
+            return "domain/post/post/write";
         }
 
         posts.add(Post.builder()
@@ -109,9 +111,6 @@ public class PostController {
                 .content(form.content)
                 .build());
 
-        return ResponseEntity
-                .status(302)
-                .header("Location", "/posts")
-                .build();
+        return "redirect:/posts";
     }
 }
