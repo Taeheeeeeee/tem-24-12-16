@@ -71,9 +71,8 @@ public class PostController {
     }
 
     @GetMapping("/write")
-    @ResponseBody
     public String showWrite() {
-        return getFormHtml("", "", "");
+        return "domain/post/post/write";
     }
 
     private record PostWriteForm(
