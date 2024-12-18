@@ -3,6 +3,10 @@
 <div th:utext="${errorMessage}"></div>
 
 <form method="POST" th:object="${postWriteForm}">
+    <div th:if="${#fields.hasAnyErrors()}">
+        <div th:each="err : ${#fields.allErrors().stream().sorted()}" th:text="${err.split('-', 2)[1]}"/>
+    </div>
+
     <label for="title">제목</label>
     <input type="text" placeholder="제목" th:field="*{title}">
     <br>

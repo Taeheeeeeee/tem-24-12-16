@@ -69,11 +69,11 @@ public class PostController {
     }
 
     private record PostWriteForm(
-            @NotBlank(message = "01-제목을 입력해주세요.")
-            @Length(min = 2, message = "02-제목을 2자 이상 입력해주세요.")
+            @NotBlank(message = "제목을 입력해주세요.")
+            @Length(min = 2, message = "제목을 2자 이상 입력해주세요.")
             String title,
-            @NotBlank(message = "03-내용을 입력해주세요.")
-            @Length(min = 2, message = "04-내용을 2자 이상 입력해주세요.")
+            @NotBlank(message = "내용을 입력해주세요.")
+            @Length(min = 2, message = "내용을 2자 이상 입력해주세요.")
             String content
     ){ }
 
@@ -89,15 +89,6 @@ public class PostController {
             , Model model
     ) {
         if(bindingResult.hasErrors()){
-            String errorMessage = bindingResult.getAllErrors()
-                    .stream()
-                    .map(err -> err.getDefaultMessage())
-                    .sorted()
-                    .map(message -> message.split("-", 2)[1])
-                    .collect(Collectors.joining("<br>"));
-
-            model.addAttribute("errorMessage", errorMessage);
-
             return "domain/post/post/write";
         }
 
