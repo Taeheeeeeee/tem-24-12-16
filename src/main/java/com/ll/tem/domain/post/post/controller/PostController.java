@@ -52,20 +52,9 @@ public class PostController {
     }
 
     @GetMapping
-    @ResponseBody
-    public String showList() {
-        String ul = "<ul>" + posts
-                .reversed()
-                .stream()
-                .map(post -> "<li>%s</li>".formatted(post.getTitle()))
-                .collect(Collectors.joining()) + "</ul>";
-
-        String body = """
-                <h2>글 목록</h2>
-                %s
-                <a href="/posts/write">글쓰기</a>
-                """.formatted(ul);
-        return body;
+    public String showList(Model model) {
+        model.addAttribute("posts", posts.reversed());
+        return "domain/post/post/list";
     }
 
     private record PostWriteForm(
